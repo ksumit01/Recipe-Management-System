@@ -1,0 +1,38 @@
+           +--------------+             +-------------+
+           |     User     |             |    Role     |
+           +--------------+             +-------------+
+           | user_id (PK) |             | role_id (PK)|
+           | username     | 1         * | role_name   |
+           | email        |---------->|             |
+           | password     |             |             |
+           | role_id (FK) |             |             |
+           | created_at   |             |             |
+           | updated_at   |             |             |
+           +--------------+             +-------------+
+                   |                            |
+                   |                            |
+                   |                            |
+                1  |                            | 1
+           +--------------+             +-------------+
+           |    Recipe    |             |    Like     |
+           +--------------+             +-------------+
+           | recipe_id (PK)|             | like_id (PK)|
+           | recipe_name  |             | user_id (FK)|
+           | ingredients  | 1         * | recipe_id (FK)|
+           | preparation_steps|         | created_at  |
+           | created_at   |             |             |
+           | updated_at   |             |             |
+           +--------------+             +-------------+
+
+           
+In this ER-Diagram, the User table has a one-to-many relationship with the Role table, 
+indicated by the "1" and "*" symbols. This means that each user can have one role, 
+but a role can be associated with multiple users.
+
+The Recipe table has a one-to-many relationship with the Like table. 
+Each recipe can have multiple likes, but a like is associated with only one recipe.
+
+The User table is connected to the Recipe table through the like_id and recipe_id 
+foreign keys, representing the relationship between users and their liked recipes.
+
+The primary keys are denoted by (PK) and foreign keys are denoted by (FK).

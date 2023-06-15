@@ -1,0 +1,47 @@
+List of Entities for the Recipe Management System:
+
+Table User:
+
+Attributes: 
+user_id (primary key), 
+username, 
+email,
+password, 
+role (foreign key referencing Role entity), 
+created_at, 
+updated_at
+
+Relationships: Many-to-One relationship with Role entity
+
+
+Table Role:
+Attributes: 
+role_id (primary key), 
+role_name
+
+Relationships: One-to-Many relationship with User entity
+
+Table Recipe:
+
+Attributes: 
+recipe_id (primary key), 
+recipe_name, 
+ingredients, 
+preparation_steps, 
+created_at, 
+updated_at
+
+
+Relationships: One-to-Many relationship with Like entity, 
+			   Many-to-Many relationship with User entity (for liked/favorite recipes)
+
+
+Table Like:
+Attributes: 
+like_id (primary key), 
+user_id (foreign key referencing User entity), 
+recipe_id (foreign key referencing Recipe entity), 
+created_at
+
+Relationships: Many-to-One relationship with User entity,
+			   Many-to-One relationship with Recipe entity
