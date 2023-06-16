@@ -9,4 +9,5 @@ public interface CustomerSer {
 	void addCustomer(User user) throws SomeThingWentWrongException;
 	void login(String username, String password) 
 			throws SomeThingWentWrongException, NoRecordFoundException;
+    
 }

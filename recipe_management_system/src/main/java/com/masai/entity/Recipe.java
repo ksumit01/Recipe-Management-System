@@ -1,19 +1,25 @@
 package com.masai.entity;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.SQLDelete;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Recipe")
+@SQLDelete(sql = "UPDATE User SET deleted = true WHERE user_id = ?")
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,23 +41,32 @@ public class Recipe {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "recipe")
-    private Set<Like> likes;
+    @Column(name = "deleted",columnDefinition = "boolean default false")
+    private boolean isDeleted;
+    
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<RecipeLike> recipeLikes;
 
+    
+	@PreRemove
+    public void softDelete() {
+        this.isDeleted = true;
+        
+    }
+    
 	public Recipe() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Recipe(String recipeName, String ingredients, String preparationSteps, Date createdAt, Date updatedAt,
-			Set<Like> likes) {
+	public Recipe(String recipeName, String ingredients, String preparationSteps, Date createdAt, Date updatedAt) {
 		super();
 		this.recipeName = recipeName;
 		this.ingredients = ingredients;
 		this.preparationSteps = preparationSteps;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
-		this.likes = likes;
+		this.recipeLikes = new HashSet<>();
 	}
 
 	public int getRecipeId() {
@@ -102,19 +117,36 @@ public class Recipe {
 		this.updatedAt = updatedAt;
 	}
 
-	public Set<Like> getLikes() {
-		return likes;
+	public Set<RecipeLike> getLikes() {
+        return recipeLikes ;
+    }
+
+    public void setLikes(Set<RecipeLike> likes) {
+        this.recipeLikes  = likes;
+    }
+
+    public void addLike(RecipeLike like) {
+    	recipeLikes .add(like);
+        like.setRecipe(this);
+    }
+
+    public void removeLike(RecipeLike like) {
+    	recipeLikes .remove(like);
+        like.setRecipe(null);
+    }
+	public boolean isDeleted() {
+		return isDeleted;
 	}
 
-	public void setLikes(Set<Like> likes) {
-		this.likes = likes;
+	public void setDeleted(boolean deleted) {
+		this.isDeleted = deleted;
 	}
 
 	@Override
 	public String toString() {
 		return "Recipe [recipeId=" + recipeId + ", recipeName=" + recipeName + ", ingredients=" + ingredients
 				+ ", preparationSteps=" + preparationSteps + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", likes=" + likes + "]";
+				+ "]";
 	}
 
     

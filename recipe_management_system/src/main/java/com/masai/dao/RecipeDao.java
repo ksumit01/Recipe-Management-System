@@ -1,9 +1,15 @@
 package com.masai.dao;
 
-import com.masai.entity.User;
+import java.util.List;
+
+import com.masai.entity.Recipe;
+
+import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWentWrongException;
 
 public interface RecipeDao {
 
-	void addUser(User user) throws SomeThingWentWrongException;
+	List<Recipe> viewAllRecipe() throws SomeThingWentWrongException,NoRecordFoundException;
+	List<Recipe> viewRecipesWithGivenIngredients(String ingredients) throws SomeThingWentWrongException,NoRecordFoundException;
+	
 }
