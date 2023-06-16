@@ -10,7 +10,8 @@ public class MainRunner {
 		System.out.println("3. Delete Recipes");
 		System.out.println("4. View Recipe Likes");
 		System.out.println("5. View Recipe Review");
-		System.out.println("6. Logout");
+		System.out.println("-1. Previous Menu");
+		System.out.println("0. Logout");
 		
 	}
 
@@ -21,15 +22,15 @@ public class MainRunner {
 			System.out.print("Enter selection ");
 			choice = sc.nextInt();
 			switch (choice) {
-//    			case 2:
-//    				AdminUI.viewCompanies();
-//    				break;
-//    			case 3:
-//    				AdminUI.updateCompanyDetails(sc);
-//    				break;
-//    			case 4:
-//    				AdminUI.addPlan(sc);
-//    				break;
+    			case 1:
+    				AdminUI.addRecipe(sc);
+    				break;
+    			case 2:
+    				AdminUI.updateRecipe(sc);
+    				break;
+    			case 3:
+    				AdminUI.deleteRecipe(sc);
+    				break;
 //    			case 5:
 //    				AdminUI.viewPlan();
 //    				break;
@@ -48,6 +49,9 @@ public class MainRunner {
 //    			case 10:
 //    				AdminUI.makePoliciesDiscontinued();
 //    				break;
+    			case -1:
+    				MainRunner.main(new String[0]);
+    				break;
 			case 0:
 				System.out.println("Bye Bye Admin");
 				break;
@@ -77,6 +81,7 @@ public class MainRunner {
 			System.out.println("2. Customer Login");
 			System.out.println("3. Customer Registration");
 			System.out.println("0. Exit");
+			
 			System.out.print("Enter Selection ");
 			choice = sc.nextInt();
 			switch (choice) {

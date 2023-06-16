@@ -1,19 +1,22 @@
 package com.masai.entity;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.hibernate.annotations.SQLDelete;
 
-
-
+import jakarta.persistence.CascadeType;
 
 //import org.hibernate.annotations.SQLDelete;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 
@@ -44,10 +47,8 @@ public class User {  //owning side
 	@Column(name = "deleted",columnDefinition = "boolean default false")
     private boolean isdeleted;
 
-    
-
-  
-    
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<RecipeLike> likes;
     public User() {
 		super();
 		
@@ -70,6 +71,7 @@ public class User {  //owning side
 		this.password = password;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.likes = new HashSet<>();
 	
 	}
 
@@ -124,6 +126,23 @@ public class User {  //owning side
 		this.isdeleted = deleted;
 	}
 
+	public Set<RecipeLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<RecipeLike> likes) {
+        this.likes = likes;
+    }
+
+    public void addLike(RecipeLike like) {
+        likes.add(like);
+        like.setUser(this);
+    }
+
+    public void removeLike(RecipeLike like) {
+        likes.remove(like);
+        like.setUser(null);
+    }
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", email=" + email + ", password=" + password

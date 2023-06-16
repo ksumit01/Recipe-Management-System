@@ -13,8 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Like")
-public class Like {
+@Table(name = "recipe_like")
+public class RecipeLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id")
@@ -31,12 +31,12 @@ public class Like {
     @Column(name = "created_at")
     private Date createdAt;
 
-	public Like() {
+	public RecipeLike() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Like(User user, Recipe recipe, Date createdAt) {
+	public RecipeLike(User user, Recipe recipe, Date createdAt) {
 		super();
 		this.user = user;
 		this.recipe = recipe;
