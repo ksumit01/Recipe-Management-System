@@ -62,12 +62,25 @@ public class CustomerUI {
 	}
 
 	static void displayUserMenu() {
-		System.out.println("1. View All Recipes");
-		System.out.println("2. Find Recipes by Ingredients");
-		System.out.println("3. Like/Unlike a Recipe ");
-		System.out.println("4. My Liked Recipes");
-		System.out.println("0. Logout");
-		System.out.println("-1. Previous Menu");
+		CustomerSer cusSer = new CustomerSerImp();
+		try {
+		    System.out.println("╔═════════════════════════════════════════════════╗");
+		    System.out.println("║ Welcome " + cusSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId).getUsername() + " ".repeat(40 - cusSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId).getUsername().length()) + "║");
+		    System.out.println("╚═════════════════════════════════════════════════╝\n");
+		} catch (SomeThingWentWrongException | NoRecordFoundException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+
+		System.out.println("╔════════════════════════════════╗");
+		System.out.println("║ 1. View All Recipes            ║");
+		System.out.println("║ 2. Find Recipes by Ingredients ║");
+		System.out.println("║ 3. Like/Unlike a Recipe        ║");
+		System.out.println("║ 4. My Liked Recipes            ║");
+		System.out.println("║ 0. Logout                      ║");
+		System.out.println("║ -1. Previous Menu              ║");
+		System.out.println("╚════════════════════════════════╝");
+
 	}
 
 	public static void userMenu(Scanner sc) {
@@ -102,8 +115,9 @@ public class CustomerUI {
 				MainRunner.main(new String[0]);
 				break;
 			case 0:
+				System.out.println("Bye 👋");
 				LoggedInUserId.loggedInUserId = -1; // -1 id cannot belong to any customer
-				System.out.println("Bye Bye User");
+				MainRunner.main(new String[0]);
 				break;
 			default:
 				System.out.println("Invalid Selection, try again");
@@ -144,9 +158,12 @@ public class CustomerUI {
 	    
 	    int choice ;
 	    do {
-	    	System.out.println("You Want to Like or Save Recipe ?" );
-			System.out.println("1. Yes");
-			System.out.println("0. No");
+	    	System.out.println("╔══════════════════════════════════╗");
+	    	System.out.println("║ You Want to Like or Save Recipe? ║");
+	    	System.out.println("║ 1. Yes                           ║");
+	    	System.out.println("║ 0. No                            ║");
+	    	System.out.println("╚══════════════════════════════════╝");
+
 		    
 		    choice =  scanner.nextInt();
 		    switch (choice) {
@@ -171,10 +188,12 @@ public class CustomerUI {
 	    
 	    int choice ;
 	    do {
-	    	
-		    System.out.println("1. Add Like");
-		    System.out.println("2. Remove Like");
-		    System.out.println("0. Go back to the previous menu");
+	    	System.out.println("╔═════════════════════════════════╗");
+	    	System.out.println("║ 1. Add Like                     ║");
+	    	System.out.println("║ 2. Remove Like                  ║");
+	    	System.out.println("║ 0. Go back to the previous menu ║");
+	    	System.out.println("╚═════════════════════════════════╝");
+
 		    choice =  scanner.nextInt();
 		    switch (choice) {
 		        case 1:
@@ -185,7 +204,7 @@ public class CustomerUI {
 		            break;
 		        case 0:
 		            
-		        	likeOrUnlike();
+		        	userMenu(scanner);
 		            break;
 		        default:
 		            System.out.println("Invalid choice!");
@@ -232,9 +251,15 @@ public class CustomerUI {
 	            em.remove(recipeLike);
 
 	            et.commit();
-	            System.out.println("Like Removed Successfully");
+	            System.out.println("╔═══════════════════════════╗");
+	            System.out.println("║ Like Removed Successfully ║");
+	            System.out.println("╚═══════════════════════════╝");
+
 	        } else {
-	            System.out.println("You haven't liked this recipe before.");
+	        	System.out.println("╔══════════════════════════════╗");
+	        	System.out.println("║ You haven't liked this recipe before. ║");
+	        	System.out.println("╚══════════════════════════════╝");
+
 	        }
 
 	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
@@ -316,7 +341,7 @@ public class CustomerUI {
 	        System.out.println("Recipes liked by the user:");
 
 	        for (Recipe recipe : uniqueLikedRecipes) {
-	            System.out.println("Recipe ID: " + recipe.getRecipeId());
+	        	System.out.println("Recipe ID: " + recipe.getRecipeId());
 	            System.out.println("Recipe Name: " + recipe.getRecipeName());
 	            System.out.println("Ingredients: " + recipe.getIngredients());
 	            System.out.println("Preparation Steps: " + recipe.getPreparationSteps());
