@@ -108,4 +108,10 @@ public class AdminDaoImp implements AdminDao{
 		
 	}
 
+	@Override
+	public void viewNumberOfLikes() throws SomeThingWentWrongException, NoRecordFoundException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

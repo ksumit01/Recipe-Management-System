@@ -5,12 +5,12 @@ import java.util.List;
 import com.masai.Utility.EMUtils;
 
 import com.masai.entity.Recipe;
-
+import com.masai.entity.User;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWentWrongException;
 
 import jakarta.persistence.EntityManager;
-
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 
 public class RecipeDaoImp implements RecipeDao {
@@ -54,6 +54,28 @@ public class RecipeDaoImp implements RecipeDao {
 	        em.close();
 	    }
 	    return recipeList;
+	}
+
+	@Override
+	public Recipe getRecipeByID(int id) throws SomeThingWentWrongException, NoRecordFoundException {
+		EntityManager em = null;
+		Recipe recipe = null;
+		try {
+			em = EMUtils.getEntityManager();
+			Query query = em.createQuery("SELECT c FROM Recipe c WHERE recipeId = :id AND isDeleted = 0");
+			query.setParameter("id", id);
+			recipe = (Recipe) query.getSingleResult();
+			System.out.println(recipe);
+			if(recipe == null) {
+				throw new NoRecordFoundException("The Recipe With the Given Id does not Exist");
+			}
+			
+		}catch(PersistenceException ex) {
+			throw new SomeThingWentWrongException("Unable to process request, try again later");
+		}finally {
+			em.close();
+		}
+		return recipe;
 	}
 
 	

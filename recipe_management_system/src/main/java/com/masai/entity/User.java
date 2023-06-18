@@ -47,7 +47,7 @@ public class User {  //owning side
 	@Column(name = "deleted",columnDefinition = "boolean default false")
     private boolean isdeleted;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<RecipeLike> likes;
     public User() {
 		super();

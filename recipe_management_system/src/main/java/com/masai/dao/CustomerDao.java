@@ -10,4 +10,5 @@ public interface CustomerDao {
 	void addCustomer(User user) throws SomeThingWentWrongException;
 	void login(String username, String password) 
 			throws SomeThingWentWrongException, NoRecordFoundException;
+	User findCustomerWithID(int id) throws SomeThingWentWrongException, NoRecordFoundException;
 }

@@ -8,7 +8,7 @@ public class MainRunner {
 		System.out.println("1. Add Recipes");
 		System.out.println("2. Update the Recipes");
 		System.out.println("3. Delete Recipes");
-		System.out.println("4. View Recipe Likes");
+		System.out.println("4. View All Recipe Likes");
 		System.out.println("5. View Recipe Review");
 		System.out.println("-1. Previous Menu");
 		System.out.println("0. Logout");
@@ -31,12 +31,12 @@ public class MainRunner {
     			case 3:
     				AdminUI.deleteRecipe(sc);
     				break;
-//    			case 5:
-//    				AdminUI.viewPlan();
-//    				break;
-//    			case 6:
-//    				AdminUI.updatePlan(sc);
-//    				break;
+    			case 4:
+    				AdminUI.viewLikes();
+    				break;
+    			case 5:
+    				RecipeReport.viewTrendingRecipesForLast7Days();
+    				break;
 //    			case 7:
 //    				AdminUI.updatePremiumAndSurcharge(sc);
 //    				break;

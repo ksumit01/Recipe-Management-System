@@ -27,6 +27,8 @@ public class AdminSerImp implements AdminSer{
 		adminDao.deleteRecipe(id);
 		
 	}
+
+	
 	
 	
 }

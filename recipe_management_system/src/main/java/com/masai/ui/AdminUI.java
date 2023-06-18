@@ -1,14 +1,21 @@
 package com.masai.ui;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
-
+import com.masai.Utility.EMUtils;
 import com.masai.entity.Recipe;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWentWrongException;
 import com.masai.service.AdminSer;
 import com.masai.service.AdminSerImp;
+import com.masai.service.RecipeLikeSer;
+import com.masai.service.RecipeLikeSerImp;
+import com.masai.service.RecipeSer;
+import com.masai.service.RecipeSerImp;
+
+import jakarta.persistence.EntityManager;
 
 
 
@@ -96,10 +103,69 @@ public class AdminUI {
 	}
 	
 	public static void viewLikes() {
-		
+		RecipeSer recipeSer = new RecipeSerImp();
+	    try {
+	        List<Recipe> recipeList = recipeSer.viewAllRecipe();
+	        RecipeLikeSer recipeLikeSer = new RecipeLikeSerImp();
+
+	        for (Recipe recipe : recipeList) {
+	            int recipeId = recipe.getRecipeId();
+	            int likeCount = recipeLikeSer.getLikesCountByRecipeId(recipeId);
+	            System.out.println("Recipe: " + recipe.getRecipeName());
+	            System.out.println("Likes: " + likeCount);
+	            System.out.println();
+	        }
+	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
+	        System.out.println(ex.getMessage());
+	    }
 	}
 	
-	public static void viewReview() {
+	// Method to generate a report of top liked recipes
+	
+
+	
+	public static void showReports(Scanner sc) {
 		
+		    int choice = 0;
+		    do {
+		    	
+		    	System.out.println("1. Top 5 Recipe");
+		    	System.out.println("2. Trending Recipe");
+		    	System.out.println("3. Total Likes and Recipe");
+		        
+		        System.out.print("Enter selection: ");
+		        choice = sc.nextInt();
+		        switch (choice) {
+		            case 1:
+		            	RecipeReport.generateTopLikedRecipesReport();
+		                break;
+		            case 2:
+		            	RecipeReport.viewTrendingRecipesForLast7Days();
+		                break;
+		            case 3:
+		            	RecipeReport.overAllLikes();
+		                break;
+//		            case 4:
+//		            	
+//		                break;
+//		            case 5:
+//		            	
+//		                break;
+//		            case 6:
+//		               
+//		                break;
+		            
+		            case -1:
+		                MainRunner.main(new String[0]);
+		                break;
+		            case 0:
+		                System.out.println("Bye Bye Admin");
+		                break;
+		            default:
+		                System.out.println("Invalid Selection, try again");
+		        }
+		    } while (choice != 0);
+	
+
 	}
 }

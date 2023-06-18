@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import com.masai.Utility.EMUtils;
 import com.masai.entity.LoggedInUserId;
 import com.masai.entity.Recipe;
+import com.masai.entity.RecipeLike;
 import com.masai.entity.User;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWentWrongException;
@@ -13,6 +15,9 @@ import com.masai.service.CustomerSer;
 import com.masai.service.CustomerSerImp;
 import com.masai.service.RecipeSer;
 import com.masai.service.RecipeSerImp;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class CustomerUI {
 
@@ -77,10 +82,10 @@ public class CustomerUI {
 				findRecipeWithGivenIngredients(sc);
 
 				break;
-//			case 3:
-//				//code to purchase a new policy
-//				likeOrBookmark(sc);
-//				break;
+			case 3:
+				//code to purchase a new policy
+				showRecipeOptions(sc);
+				break;
 //			case 4:
 //				//code to view policies purchased by logged in user
 //				
@@ -110,13 +115,15 @@ public class CustomerUI {
 		try {
 			List<Recipe> recipeList = recipeSer.viewRecipesWithGivenIngredients( ingridents);
 			recipeList.forEach(t -> System.out.println(t));
+			likeOrUnlike();
+			
 		} catch (NoRecordFoundException | SomeThingWentWrongException ex) {
 			System.out.println(ex.getMessage());
 		}
 		
 	}
 
-	private static void viewAllRecipe() {
+	public static void viewAllRecipe() {
 		RecipeSer recipeSer = new RecipeSerImp();
 		try {
 			List<Recipe> recipeList = recipeSer.viewAllRecipe();
@@ -126,5 +133,146 @@ public class CustomerUI {
 		}
 
 	}
+	
+	public static void likeOrUnlike() {
+		
+		Scanner scanner = new Scanner(System.in);
+	    
+	    int choice ;
+	    do {
+	    	System.out.println("You Want to Like or Save Recipe ?" );
+			System.out.println("1. Yes");
+			System.out.println("0. No");
+		    
+		    choice =  scanner.nextInt();
+		    switch (choice) {
+		        case 1:
+		        	showRecipeOptions(scanner);
+		            break;
+		        case 0:
+		        	userMenu(scanner);
+		            break;
+		        default:
+		            System.out.println("Invalid choice!");
+		    }
+	    }while(choice != 0);
+		
+		
+				
+		
+	}
+	
+	public static void showRecipeOptions(Scanner scanner) {
+//	    Scanner scanner = new Scanner(System.in);
+	    
+	    int choice ;
+	    do {
+	    	
+		    System.out.println("1. Add Like");
+		    System.out.println("2. Remove Like");
+		    System.out.println("0. Go back to the previous menu");
+		    choice =  scanner.nextInt();
+		    switch (choice) {
+		        case 1:
+		            addLike();
+		            break;
+		        case 2:
+		            removeLike();
+		            break;
+		        case 0:
+		            
+		        	likeOrUnlike();
+		            break;
+		        default:
+		            System.out.println("Invalid choice!");
+		    }
+	    }while(choice != 0);
+	    
+	}
+
+	private static void removeLike() {
+//	    Scanner scanner = new Scanner(System.in);
+//	    System.out.println("Enter the recipe ID you want to remove the like from: ");
+//	    int recipeId = scanner.nextInt();
+//	    User user = null;
+//	    CustomerSer customerSer = new CustomerSerImp();
+//
+//	    // Retrieve the User entity for the current logged-in user
+//	    try {
+//	        user = customerSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId);
+//	    } catch (SomeThingWentWrongException | NoRecordFoundException e) {
+//	        System.out.println(e.getMessage());
+//	    }
+//
+//	    RecipeSer recipeSer = new RecipeSerImp();
+//	    EntityManager em = null;
+//	    try {
+//	        em = EMUtils.getEntityManager();
+//	        Recipe recipe = recipeSer.getRecipeByID(recipeId);
+//
+//	        // Find the RecipeLike associated with the User and Recipe
+//	        RecipeLike recipeLike = user.getLikeByRecipe(recipe);
+//
+//	        if (recipeLike != null) {
+//	            EntityTransaction et = em.getTransaction();
+//	            et.begin();
+//
+//	            // Remove the RecipeLike entity to remove the like association
+//	            em.remove(recipeLike);
+//	            et.commit();
+//	            System.out.println("Like Removed Successfully");
+//	        } else {
+//	            System.out.println("You haven't liked this recipe before.");
+//	        }
+//	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
+//	        System.out.println(ex.getMessage());
+//	    } finally {
+//	        em.close();
+//	    }
+	}
+
+
+	private static void addLike() {
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.println("Enter the recipe ID you want to like: ");
+	    int recipeId = scanner.nextInt();
+	    User user = null;
+	    CustomerSer customerSer = new CustomerSerImp();
+
+	    // Retrieve the User entity for the current logged-in user
+	    try {
+	        user = customerSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId);
+	    } catch (SomeThingWentWrongException | NoRecordFoundException e) {
+	        System.out.println(e.getMessage());
+	    }
+
+	    RecipeSer recipeSer = new RecipeSerImp();
+	    EntityManager em = null;
+	    try {
+	        em = EMUtils.getEntityManager();
+	        Recipe recipe = recipeSer.getRecipeByID(recipeId);
+
+	        // Create a new RecipeLike and associate it with the User and Recipe
+	        RecipeLike recipeLike = new RecipeLike(user, recipe, new Date());
+	        user.addLike(recipeLike);
+	        recipe.getLikes().add(recipeLike);
+
+	        EntityTransaction et = em.getTransaction();
+	        et.begin();
+
+	        // Since the User and Recipe entities are already retrieved and managed, you don't need to persist them again.
+	        // However, you need to update the RecipeLike entity to persist the like association.
+
+	        em.persist(recipeLike);
+	        et.commit();
+	        System.out.println("Like Added Successfully");
+	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
+	        System.out.println(ex.getMessage());
+	    } finally {
+	        em.close();
+	    }
+	}
+
+
 
 }
