@@ -65,7 +65,7 @@ public class RecipeDaoImp implements RecipeDao {
 			Query query = em.createQuery("SELECT c FROM Recipe c WHERE recipeId = :id AND isDeleted = 0");
 			query.setParameter("id", id);
 			recipe = (Recipe) query.getSingleResult();
-			System.out.println(recipe);
+//			System.out.println(recipe);
 			if(recipe == null) {
 				throw new NoRecordFoundException("The Recipe With the Given Id does not Exist");
 			}

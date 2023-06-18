@@ -34,7 +34,7 @@ public class AdminUI {
 
         Recipe recipe = new Recipe(recipeName, ingredients, preparationStep, new Date(), new Date());
 
-        System.out.println(recipe);
+//        System.out.println(recipe);
         AdminSer adminSer = new AdminSerImp();
 
         try {
@@ -129,25 +129,56 @@ public class AdminUI {
 		    int choice = 0;
 		    do {
 		    	
-		    	System.out.println("1. Top 5 Recipe");
-		    	System.out.println("2. Trending Recipe");
-		    	System.out.println("3. Total Likes and Recipe");
+		    	System.out.println("╔══════════════════════════════╗");
+		    	System.out.println("║         Menu Options         ║");
+		    	System.out.println("╠══════════════════════════════╣");
+		    	System.out.println("║  1. Top 5 Recipe             ║");
+		    	System.out.println("║                              ║");
+		    	System.out.println("║  2. Trending Recipe          ║");
+		    	System.out.println("║                              ║");
+		    	System.out.println("║  3. Trending Ingredients     ║");
+		    	System.out.println("║                              ║");
+		    	System.out.println("║  4. Likes Over Time          ║");
+		    	System.out.println("║                              ║");
+		    	System.out.println("║  0. Go Back To Previous Menu ║");
+		    	System.out.println("╚══════════════════════════════╝");
+
 		        
 		        System.out.print("Enter selection: ");
 		        choice = sc.nextInt();
 		        switch (choice) {
 		            case 1:
-		            	RecipeReport.generateTopLikedRecipesReport();
+					try {
+						RecipeReport.generateTopLikedRecipesReport();
+					} catch (SomeThingWentWrongException | NoRecordFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		                break;
 		            case 2:
-		            	RecipeReport.viewTrendingRecipesForLast7Days();
+					try {
+						RecipeReport.viewTrendingRecipesForLast7Days();
+					} catch (SomeThingWentWrongException | NoRecordFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		                break;
 		            case 3:
-		            	RecipeReport.overAllLikes();
+					try {
+						RecipeReport.generateLikesByIngredient();
+					} catch (SomeThingWentWrongException | NoRecordFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		                break;
-//		            case 4:
-//		            	
-//		                break;
+		            case 4:
+					try {
+						RecipeReport.generateLikesOverTime();
+					} catch (SomeThingWentWrongException | NoRecordFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+		                break;
 //		            case 5:
 //		            	
 //		                break;
@@ -155,11 +186,9 @@ public class AdminUI {
 //		               
 //		                break;
 		            
-		            case -1:
-		                MainRunner.main(new String[0]);
-		                break;
+		            
 		            case 0:
-		                System.out.println("Bye Bye Admin");
+		            	MainRunner.adminMenu(sc);
 		                break;
 		            default:
 		                System.out.println("Invalid Selection, try again");

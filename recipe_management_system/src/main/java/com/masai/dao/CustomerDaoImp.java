@@ -82,7 +82,7 @@ public class CustomerDaoImp implements CustomerDao{
 			Query query = em.createQuery("SELECT c FROM User c WHERE id = :userId AND isdeleted = 0");
 			query.setParameter("userId", id);
 			user = (User) query.getSingleResult();
-			System.out.println(user);
+//			System.out.println(user);
 			if(user == null) {
 				throw new NoRecordFoundException("The user With the Given Id does not Exist");
 			}
@@ -97,5 +97,7 @@ public class CustomerDaoImp implements CustomerDao{
 		
 		
 	}
+	
+	
 
 }

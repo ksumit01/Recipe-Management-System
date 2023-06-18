@@ -1,7 +1,7 @@
 package com.masai.entity;
 
 import java.util.Date;
-
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -75,6 +75,24 @@ public class RecipeLike {
 	@Override
 	public String toString() {
 		return "Like [likeId=" + likeId + ", user=" + user + ", recipe=" + recipe + ", createdAt=" + createdAt + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(createdAt, likeId, recipe, user);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RecipeLike other = (RecipeLike) obj;
+		return Objects.equals(createdAt, other.createdAt) && likeId == other.likeId
+				&& Objects.equals(recipe, other.recipe) && Objects.equals(user, other.user);
 	}
 
     

@@ -2,6 +2,7 @@ package com.masai.entity;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.hibernate.annotations.SQLDelete;
@@ -147,6 +148,28 @@ public class Recipe {
 		return "Recipe [recipeId=" + recipeId + ", recipeName=" + recipeName + ", ingredients=" + ingredients
 				+ ", preparationSteps=" + preparationSteps + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
 				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(createdAt, ingredients, isDeleted, preparationSteps, recipeId, recipeLikes, recipeName,
+				updatedAt);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Recipe other = (Recipe) obj;
+		return Objects.equals(createdAt, other.createdAt) && Objects.equals(ingredients, other.ingredients)
+				&& isDeleted == other.isDeleted && Objects.equals(preparationSteps, other.preparationSteps)
+				&& recipeId == other.recipeId && Objects.equals(recipeLikes, other.recipeLikes)
+				&& Objects.equals(recipeName, other.recipeName) && Objects.equals(updatedAt, other.updatedAt);
 	}
 
     
