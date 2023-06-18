@@ -1,8 +1,11 @@
 package com.masai.ui;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import com.masai.Utility.EMUtils;
 import com.masai.entity.LoggedInUserId;
@@ -59,9 +62,10 @@ public class CustomerUI {
 	}
 
 	static void displayUserMenu() {
-		System.out.println("1. View All Recipe");
-		System.out.println("2. Find Recipe With Given Ingredients");
-		System.out.println("3. Like Or Bookmark ");
+		System.out.println("1. View All Recipes");
+		System.out.println("2. Find Recipes by Ingredients");
+		System.out.println("3. Like/Unlike a Recipe ");
+		System.out.println("4. My Liked Recipes");
 		System.out.println("0. Logout");
 		System.out.println("-1. Previous Menu");
 	}
@@ -86,10 +90,10 @@ public class CustomerUI {
 				//code to purchase a new policy
 				showRecipeOptions(sc);
 				break;
-//			case 4:
-//				//code to view policies purchased by logged in user
+			case 4:
+				fetchLikedRecipesByUser();
 //				
-//				break;
+				break;
 //			case 5:
 //				deleteAccount(sc);
 //				System.out.println("Logging you out");
@@ -191,45 +195,55 @@ public class CustomerUI {
 	}
 
 	private static void removeLike() {
-//	    Scanner scanner = new Scanner(System.in);
-//	    System.out.println("Enter the recipe ID you want to remove the like from: ");
-//	    int recipeId = scanner.nextInt();
-//	    User user = null;
-//	    CustomerSer customerSer = new CustomerSerImp();
-//
-//	    // Retrieve the User entity for the current logged-in user
-//	    try {
-//	        user = customerSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId);
-//	    } catch (SomeThingWentWrongException | NoRecordFoundException e) {
-//	        System.out.println(e.getMessage());
-//	    }
-//
-//	    RecipeSer recipeSer = new RecipeSerImp();
-//	    EntityManager em = null;
-//	    try {
-//	        em = EMUtils.getEntityManager();
-//	        Recipe recipe = recipeSer.getRecipeByID(recipeId);
-//
-//	        // Find the RecipeLike associated with the User and Recipe
-//	        RecipeLike recipeLike = user.getLikeByRecipe(recipe);
-//
-//	        if (recipeLike != null) {
-//	            EntityTransaction et = em.getTransaction();
-//	            et.begin();
-//
-//	            // Remove the RecipeLike entity to remove the like association
-//	            em.remove(recipeLike);
-//	            et.commit();
-//	            System.out.println("Like Removed Successfully");
-//	        } else {
-//	            System.out.println("You haven't liked this recipe before.");
-//	        }
-//	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
-//	        System.out.println(ex.getMessage());
-//	    } finally {
-//	        em.close();
-//	    }
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.println("Enter the recipe ID you want to remove the like from: ");
+	    int recipeId = scanner.nextInt();
+	    User user = null;
+	    CustomerSer customerSer = new CustomerSerImp();
+
+	    // Retrieve the User entity for the current logged-in user
+	    try {
+	        user = customerSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId);
+	    } catch (SomeThingWentWrongException | NoRecordFoundException e) {
+	        System.out.println(e.getMessage());
+	    }
+
+	    RecipeSer recipeSer = new RecipeSerImp();
+	    EntityManager em = null;
+	    try {
+	        em = EMUtils.getEntityManager();
+	        Recipe recipe = recipeSer.getRecipeByID(recipeId);
+	        
+//	        System.out.println(recipe);
+	        // Find the RecipeLike associated with the User and Recipe
+	        RecipeLike recipeLike = user.getLikeByRecipe(recipe);
+	        
+//	        System.out.println(recipeLike);
+	        
+	        if (recipeLike != null) {
+	            EntityTransaction et = em.getTransaction();
+	            et.begin();
+
+	            // Remove the RecipeLike entity from the User
+	            user.removeLike(recipeLike);
+
+	            recipeLike = em.merge(recipeLike);
+	            // Remove the RecipeLike entity from the EntityManager
+	            em.remove(recipeLike);
+
+	            et.commit();
+	            System.out.println("Like Removed Successfully");
+	        } else {
+	            System.out.println("You haven't liked this recipe before.");
+	        }
+
+	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
+	        System.out.println(ex.getMessage());
+	    } finally {
+	        em.close();
+	    }
 	}
+
 
 
 	private static void addLike() {
@@ -270,6 +284,46 @@ public class CustomerUI {
 	        System.out.println(ex.getMessage());
 	    } finally {
 	        em.close();
+	    }
+	}
+
+
+	
+	private static void fetchLikedRecipesByUser() {
+	    User user = null;
+	    CustomerSer customerSer = new CustomerSerImp();
+
+	    // Retrieve the User entity for the current logged-in user
+	    try {
+	        user = customerSer.findCustomerWithID((int) LoggedInUserId.loggedInUserId);
+	    } catch (SomeThingWentWrongException | NoRecordFoundException e) {
+	        System.out.println(e.getMessage());
+	        return;
+	    }
+
+	    Set<Integer> uniqueRecipeIds = new HashSet<>();
+	    List<Recipe> uniqueLikedRecipes = new ArrayList<>();
+
+	    for (RecipeLike recipeLike : user.getLikes()) {
+	        Recipe recipe = recipeLike.getRecipe();
+	        if (!uniqueRecipeIds.contains(recipe.getRecipeId())) {
+	            uniqueLikedRecipes.add(recipe);
+	            uniqueRecipeIds.add(recipe.getRecipeId());
+	        }
+	    }
+
+	    if (!uniqueLikedRecipes.isEmpty()) {
+	        System.out.println("Recipes liked by the user:");
+
+	        for (Recipe recipe : uniqueLikedRecipes) {
+	            System.out.println("Recipe ID: " + recipe.getRecipeId());
+	            System.out.println("Recipe Name: " + recipe.getRecipeName());
+	            System.out.println("Ingredients: " + recipe.getIngredients());
+	            System.out.println("Preparation Steps: " + recipe.getPreparationSteps());
+	            System.out.println();
+	        }
+	    } else {
+	        System.out.println("No recipes liked by the user.");
 	    }
 	}
 
