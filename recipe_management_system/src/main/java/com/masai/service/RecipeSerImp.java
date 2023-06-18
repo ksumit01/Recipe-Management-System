@@ -22,6 +22,11 @@ public class RecipeSerImp implements RecipeSer{
 		return recipeDao.viewRecipesWithGivenIngredients(ingredients);
 		 
 	}
+	@Override
+	public Recipe getRecipeByID(int id) throws SomeThingWentWrongException, NoRecordFoundException {
+		
+		return recipeDao.getRecipeByID(id);
+	}
 
 	
 

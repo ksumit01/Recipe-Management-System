@@ -44,7 +44,7 @@ public class Recipe {
     @Column(name = "deleted",columnDefinition = "boolean default false")
     private boolean isDeleted;
     
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<RecipeLike> recipeLikes;
 
     

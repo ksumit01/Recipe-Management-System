@@ -19,5 +19,10 @@ public class CustomerSerImp implements CustomerSer{
 		
 		cusDao.login(username, password);
 	}
+	@Override
+	public User findCustomerWithID(int id) throws SomeThingWentWrongException, NoRecordFoundException {
+		
+		return cusDao.findCustomerWithID(id);
+	}
 	
 }

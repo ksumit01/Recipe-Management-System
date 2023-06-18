@@ -61,7 +61,7 @@ public class CustomerDaoImp implements CustomerDao{
 			List<Integer> listInt = (List<Integer>)query.getResultList();
 			if(listInt.size() == 0) {
 				//you are here means company with given name exists so throw exceptions
-				throw new SomeThingWentWrongException("The username or password is incorrect");
+				throw new NoRecordFoundException("The username or password is incorrect");
 			}
 			LoggedInUserId.loggedInUserId = listInt.get(0);
 		}catch(PersistenceException ex) {
@@ -69,6 +69,32 @@ public class CustomerDaoImp implements CustomerDao{
 		}finally{
 			em.close();
 		}
+		
+	}
+
+	@Override
+	public User findCustomerWithID(int id) throws SomeThingWentWrongException, NoRecordFoundException {
+		
+		EntityManager em = null;
+		User user = null;
+		try {
+			em = EMUtils.getEntityManager();
+			Query query = em.createQuery("SELECT c FROM User c WHERE id = :userId AND isdeleted = 0");
+			query.setParameter("userId", id);
+			user = (User) query.getSingleResult();
+			System.out.println(user);
+			if(user == null) {
+				throw new NoRecordFoundException("The user With the Given Id does not Exist");
+			}
+			
+		}catch(PersistenceException ex) {
+			throw new SomeThingWentWrongException("Unable to process request, try again later");
+		}finally {
+			em.close();
+		}
+		
+		return user;
+		
 		
 	}
 
