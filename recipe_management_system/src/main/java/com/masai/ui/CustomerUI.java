@@ -112,13 +112,13 @@ public class CustomerUI {
 //				System.out.println("Logging you out");
 //				choice = 0;
 			case -1:
-				MainRunner.main(new String[0]);
-				break;
+				return;
+//				break;
 			case 0:
 				System.out.println("Bye 👋");
 				LoggedInUserId.loggedInUserId = -1; // -1 id cannot belong to any customer
-				MainRunner.main(new String[0]);
-				break;
+				return;
+//				break;
 			default:
 				System.out.println("Invalid Selection, try again");
 			}
@@ -171,8 +171,7 @@ public class CustomerUI {
 		        	showRecipeOptions(scanner);
 		            break;
 		        case 0:
-		        	userMenu(scanner);
-		            break;
+		        	return;
 		        default:
 		            System.out.println("Invalid choice!");
 		    }
@@ -204,8 +203,8 @@ public class CustomerUI {
 		            break;
 		        case 0:
 		            
-		        	userMenu(scanner);
-		            break;
+		        	return;
+//		            break;
 		        default:
 		            System.out.println("Invalid choice!");
 		    }
@@ -291,6 +290,31 @@ public class CustomerUI {
 	        em = EMUtils.getEntityManager();
 	        Recipe recipe = recipeSer.getRecipeByID(recipeId);
 
+	        // Check if the user has already liked the recipe
+	        boolean alreadyLiked = false;
+	        for (RecipeLike like : user.getLikes()) {
+	            if (like.getRecipe().getRecipeId() == recipeId) {
+	                alreadyLiked = true;
+	                break;
+	            }
+	        }
+
+	        if (alreadyLiked) {
+	            System.out.println("You have already liked this recipe before.");
+	            return;
+	        }
+
+	        // Check if the like associated with the recipe is deleted
+	        for (RecipeLike like : recipe.getLikes()) {
+	            if (like.getUser().getUserId() == user.getUserId()) {
+	                if (like.getUser().isDeleted()) {
+	                    like.getUser().setIsdeleted(true); // Undelete the like
+	                    System.out.println("Successfully undeleted the like.");
+	                }
+	                return;
+	            }
+	        }
+
 	        // Create a new RecipeLike and associate it with the User and Recipe
 	        RecipeLike recipeLike = new RecipeLike(user, recipe, new Date());
 	        user.addLike(recipeLike);
@@ -313,6 +337,7 @@ public class CustomerUI {
 	}
 
 
+
 	
 	private static void fetchLikedRecipesByUser() {
 	    User user = null;
@@ -331,7 +356,10 @@ public class CustomerUI {
 
 	    for (RecipeLike recipeLike : user.getLikes()) {
 	        Recipe recipe = recipeLike.getRecipe();
-	        if (!uniqueRecipeIds.contains(recipe.getRecipeId())) {
+	        if (recipe.isDeleted()) {
+	            continue; // Skip deleted recipes
+	        }
+	        if (!recipeLike.getRecipe().isDeleted() && !recipeLike.getUser().isIsdeleted() && !uniqueRecipeIds.contains(recipe.getRecipeId())) {
 	            uniqueLikedRecipes.add(recipe);
 	            uniqueRecipeIds.add(recipe.getRecipeId());
 	        }
@@ -341,7 +369,7 @@ public class CustomerUI {
 	        System.out.println("Recipes liked by the user:");
 
 	        for (Recipe recipe : uniqueLikedRecipes) {
-	        	System.out.println("Recipe ID: " + recipe.getRecipeId());
+	            System.out.println("Recipe ID: " + recipe.getRecipeId());
 	            System.out.println("Recipe Name: " + recipe.getRecipeName());
 	            System.out.println("Ingredients: " + recipe.getIngredients());
 	            System.out.println("Preparation Steps: " + recipe.getPreparationSteps());
