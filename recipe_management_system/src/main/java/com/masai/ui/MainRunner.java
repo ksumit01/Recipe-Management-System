@@ -19,43 +19,47 @@ public class MainRunner {
 	    System.out.println("╚══════════════════════════════╝");
 	}
 
+	static void adminReturn() {
+		main(new String[0]);
+	}
+	
 
 
 	static void adminMenu(Scanner sc) {
-		int choice = 0;
-		do {
-			displayAdminMenu();
-			System.out.print("Enter selection ");
-			choice = sc.nextInt();
-			switch (choice) {
-    			case 1:
-    				AdminUI.addRecipe(sc);
-    				break;
-    			case 2:
-    				AdminUI.updateRecipe(sc);
-    				break;
-    			case 3:
-    				AdminUI.deleteRecipe(sc);
-    				break;
-    			case 4:
-    				AdminUI.viewLikes();
-    				break;
-    			case 5:
-    				AdminUI.showReports(sc);
-    				break;
-    			case -1:
-    				System.out.println("Bye Bye Admin");
-    				MainRunner.main(new String[0]);
-    				break;
-			case 0:
-				System.out.println("Bye Bye Admin");
-				MainRunner.main(new String[0]);
-				break;
-			default:
-				System.out.println("Invalid Selection, try again");
-			}
-		} while (choice != 0);
+	    int choice = 0;
+	    do {
+	        displayAdminMenu();
+	        System.out.print("Enter selection: ");
+	        choice = sc.nextInt();
+	        switch (choice) {
+	            case 1:
+	                AdminUI.addRecipe(sc);
+	                break;
+	            case 2:
+	                AdminUI.updateRecipe(sc);
+	                break;
+	            case 3:
+	                AdminUI.deleteRecipe(sc);
+	                break;
+	            case 4:
+	                AdminUI.viewLikes();
+	                break;
+	            case 5:
+	                AdminUI.showReports(sc);
+	                break;
+	            case -1:
+	                System.out.println("Returning to the previous menu...");
+	                return; // Exit the adminMenu() method and return to the main method
+	            case 0:
+	                System.out.println("Logging out...");
+	                return; // Exit the adminMenu() method and return to the main method
+	            default:
+	                System.out.println("Invalid Selection, try again");
+	        }
+	    } while (choice != -1 && choice != 0);
 	}
+
+
 
 	static void adminLogin(Scanner sc) {
 	
@@ -70,30 +74,31 @@ public class MainRunner {
 		}
 	}
 
+	public static void mainMenu() {
+		System.out.println("╔════════════════════════════════════════════════╗");
+    	System.out.println("║       Welcome To Recipe Management System      ║");
+    	System.out.println("╠════════════════════════════════════════════════╣");
+    	System.out.println("║ 1. Admin Login                                 ║");
+    	System.out.println("║ 2. Customer Login                              ║");
+    	System.out.println("║ 3. Customer Registration                       ║");
+    	System.out.println("║ 0. Exit                                        ║");
+    	System.out.println("╚════════════════════════════════════════════════╝");
+
+	}
+	
 	public static void main(String[] args) {
 	    Scanner sc = new Scanner(System.in);
-	    int choice = 0;
+	    
+	    int choice ;
+
 
 	    do {
-	    	System.out.println("╔════════════════════════════════════════════════╗");
-	    	System.out.println("║       Welcome To Recipe Management System      ║");
-	    	System.out.println("╠════════════════════════════════════════════════╣");
-	    	System.out.println("║ 1. Admin Login                                 ║");
-	    	System.out.println("║ 2. Customer Login                              ║");
-	    	System.out.println("║ 3. Customer Registration                       ║");
-	    	System.out.println("║ 0. Exit                                        ║");
-	    	System.out.println("╚════════════════════════════════════════════════╝");
-
+	    	
+	    	mainMenu();
 
 	        System.out.println("Enter Selection: ");
-	       
-//	        String input = sc.nextLine();
-
-//	        choice = Integer.parseInt(input);
 	         choice = sc.nextInt();
-	        try {
-
-	            switch (choice) {
+	         switch (choice) {
 	                case 1:
 	                    adminLogin(sc);
 	                    break;
@@ -109,13 +114,9 @@ public class MainRunner {
 	                default:
 	                    System.out.println("Invalid Selection, try again");
 	            }
-	        } catch (Exception e) {
-//	            System.out.println("Invalid input. Please enter a valid integer.\n");
-	            System.out.println(e.getMessage());
-	        }
-	    } while (choice != 0);
+	        }  while (choice != 0);
 
-//	    sc.close();
+	    sc.close();
 	}
 
 

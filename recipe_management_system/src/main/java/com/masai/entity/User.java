@@ -76,6 +76,23 @@ public class User { // owning side
 		this.likes = new HashSet<>();
 
 	}
+	
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public boolean isIsdeleted() {
+		return isdeleted;
+	}
+
+	public void setIsdeleted(boolean isdeleted) {
+		this.isdeleted = isdeleted;
+	}
 
 	public String getUsername() {
 		return username;

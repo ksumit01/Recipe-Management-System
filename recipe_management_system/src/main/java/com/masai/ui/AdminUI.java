@@ -103,22 +103,26 @@ public class AdminUI {
 	}
 	
 	public static void viewLikes() {
-		RecipeSer recipeSer = new RecipeSerImp();
+	    RecipeSer recipeSer = new RecipeSerImp();
+	    RecipeLikeSer recipeLikeSer = new RecipeLikeSerImp();
+
 	    try {
 	        List<Recipe> recipeList = recipeSer.viewAllRecipe();
-	        RecipeLikeSer recipeLikeSer = new RecipeLikeSerImp();
 
 	        for (Recipe recipe : recipeList) {
-	            int recipeId = recipe.getRecipeId();
-	            int likeCount = recipeLikeSer.getLikesCountByRecipeId(recipeId);
-	            System.out.println("Recipe: " + recipe.getRecipeName());
-	            System.out.println("Likes: " + likeCount);
-	            System.out.println();
+	            if (!recipe.isDeleted()) {
+	                int recipeId = recipe.getRecipeId();
+	                int likeCount = recipeLikeSer.getLikesCountByRecipeId(recipeId);
+	                System.out.println("Recipe: " + recipe.getRecipeName());
+	                System.out.println("Likes: " + likeCount);
+	                System.out.println();
+	            }
 	        }
 	    } catch (NoRecordFoundException | SomeThingWentWrongException ex) {
 	        System.out.println(ex.getMessage());
 	    }
 	}
+
 	
 	// Method to generate a report of top liked recipes
 	
@@ -188,8 +192,9 @@ public class AdminUI {
 		            
 		            
 		            case 0:
-		            	MainRunner.adminMenu(sc);
-		                break;
+//		            	MainRunner.adminMenu(sc);
+		            	return;
+//		                break;
 		            default:
 		                System.out.println("Invalid Selection, try again");
 		        }
