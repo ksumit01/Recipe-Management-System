@@ -7,6 +7,11 @@
 ## Recipe Management System
 The Recipe Management System is a Java-based software solution that provides users with a user-friendly interface to store, search, and retrieve recipes, while allowing admin users to manage recipes and perform CRUD operations.
 
+## ![TECH_STACK](https://img.shields.io/badge/Tech_Stack-%231572B6.svg?style=for-the-badge)
+- Core Java
+- MySql
+- Hibernate
+- MAVEN
 
 
 
